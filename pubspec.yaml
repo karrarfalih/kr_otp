@@ -1,7 +1,10 @@
 name: kr_otp
 description: "A Flutter package for managing feature flags using Firebase Realtime Database."
-version: 1.0.1
+version: 1.0.3
 homepage: https://github.com/karrarfalih/kr_otp
+screenshots:
+  - description: 'This is screenshot that shows the use of the package'
+    path: example/screenshots/screen2.png
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
