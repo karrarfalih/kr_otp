@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Otp Expample',
+      debugShowCheckedModeBanner: false,
       home: OtpScreen(phone: '07714683468'),
     );
   }
@@ -155,28 +156,7 @@ class _OtpScreenState extends State<OtpScreen> {
                 ),
               ),
               const Spacer(),
-              KrOtpKeyboard(
-                buttonColor: Colors.blue,
-                buttonStyle: TextButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.all(20),
-                  minimumSize: const Size(60, 60),
-                ),
-                keyboardPadding: const EdgeInsets.symmetric(horizontal: 20),
-                primaryTextStyle: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-                secondaryTextStyle: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white54,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
+              const KrOtpKeyboard(),
             ],
           ),
         ),

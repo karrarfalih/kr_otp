@@ -1,5 +1,16 @@
 # kr_otp
 
+
+<div style="display: flex; justify-content: center; margin-bottom: 20px;">
+  <img src="screen1.gif" alt="Image 1" style="height: 500px; margin-right: 10px;">  <img src="screen2.png" alt="Image 2" style="height: 500px; margin-left: 10px;">  </div>
+
+
+
+
+
+
+
+
 OTP Input Package is a Flutter package that provides components for easy and customizable OTP input functionality in your Flutter applications.
 
 # Table of Contents
@@ -92,6 +103,7 @@ OtpInputField(
 KrOtpKeyboard(
   buttonColor: Colors.blue,
   buttonStyle: TextButton.styleFrom(
+    backgroundColor: Colors.blue,
     foregroundColor: Colors.white,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10),
