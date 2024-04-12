@@ -1,7 +1,10 @@
 # kr_otp
 
 
-![Image 1](example/screenshots/screen1.gif)
+<div style="display: flex; justify-content: center; height: 300px;">
+  <img src="https://raw.githubusercontent.com/karrarfalih/kr_otp/main/example/screenshots/screen1.gif" alt="Image 1" style="height: 300px; margin-right: 10px;">
+</div>
+
 
 OTP Input Package is a Flutter package that provides components for easy and customizable OTP input functionality in your Flutter applications.
 
@@ -21,7 +24,7 @@ Add `kr_otp` to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  kr_otp: ^1.0.0
+  kr_otp: ^1.0.6
 ```
 
 Run flutter pub get to install the package.
