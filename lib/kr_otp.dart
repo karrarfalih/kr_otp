@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shakemywidget/flutter_shakemywidget.dart';
-import 'package:kr_otp/src/controller.dart';
+import 'package:kr_otp/controller.dart';
 
 import 'src/notifier.dart';
 

@@ -54,16 +54,20 @@ class OtpController {
         onCodeSubmitted.call(numbers.value.join()).then((isSuccess) async {
           if (!isSuccess) {
             showToast('Invalid activation code');
-            shakeKey.currentState?.shake();
-            isSahking.value = true;
-            numbers.value = List.generate(6, (index) => '');
-            focusedIndex.value = 0;
-            await Future.delayed(Duration(seconds: 1));
-            isSahking.value = false;
+            await shake();
           }
         });
       }
     }
+  }
+
+  shake() async {
+    shakeKey.currentState?.shake();
+    isSahking.value = true;
+    numbers.value = List.generate(6, (index) => '');
+    focusedIndex.value = 0;
+    await Future.delayed(Duration(seconds: 1));
+    isSahking.value = false;
   }
 
   showToast(String message) {

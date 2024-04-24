@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.7] - 2024-04-24
+- Add `onKeyPressed` to the `KrOtpKeyboard` to use it independently of the `OtpInputField`.
+- extract the `shake` method in the `OtpController` to maunually shake the `OtpInputField`.
+  
 ## [1.0.6] - 2024-04-11
 - Update Example and README.md file
 

@@ -24,7 +24,7 @@ Add `kr_otp` to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  kr_otp: ^1.0.6
+  kr_otp: ^1.0.7
 ```
 
 Run flutter pub get to install the package.

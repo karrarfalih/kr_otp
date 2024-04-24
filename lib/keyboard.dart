@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:kr_otp/src/controller.dart';
+import 'package:kr_otp/controller.dart';
 import 'package:vibration/vibration.dart';
 
 class KrOtpKeyboard extends StatelessWidget {
@@ -15,6 +15,7 @@ class KrOtpKeyboard extends StatelessWidget {
     this.spacing = 6,
     this.runSpacing = 6,
     this.keyboardPadding,
+    this.onKeyPressed,
   }) : super(key: key);
 
   final Color? buttonColor;
@@ -24,6 +25,7 @@ class KrOtpKeyboard extends StatelessWidget {
   final double spacing;
   final double runSpacing;
   final EdgeInsetsGeometry? keyboardPadding;
+  final Function(String)? onKeyPressed;
 
   OtpController? get controller => OtpController.instance;
 
@@ -79,7 +81,11 @@ class KrOtpKeyboard extends StatelessWidget {
             horizontal: spacing / 2, vertical: runSpacing / 2),
         child: TextButton(
           onPressed: () {
-            controller?.onKeyPadPressed(value);
+            if (onKeyPressed != null) {
+              onKeyPressed!(value);
+            } else {
+              controller?.onKeyPadPressed(value);
+            }
             Vibration.hasVibrator().then((canVibrate) {
               if (canVibrate == true)
                 Vibration.vibrate(duration: 5, amplitude: 100);
@@ -123,7 +129,11 @@ class KrOtpKeyboard extends StatelessWidget {
             horizontal: spacing / 2, vertical: runSpacing / 2),
         child: GestureDetector(
           onTap: () {
-            controller?.onKeyPadPressed('x');
+            if (onKeyPressed != null) {
+              onKeyPressed!('x');
+            } else {
+              controller?.onKeyPadPressed('x');
+            }
             Vibration.hasVibrator().then((canVibrate) {
               if (canVibrate == true)
                 Vibration.vibrate(duration: 5, amplitude: 100);
