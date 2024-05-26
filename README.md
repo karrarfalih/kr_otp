@@ -24,7 +24,7 @@ Add `kr_otp` to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  kr_otp: ^1.0.7
+  kr_otp: ^1.0.8
 ```
 
 Run flutter pub get to install the package.
@@ -84,6 +84,7 @@ OtpInputField(
   },
   length: 6, // Length of the OTP code (default is 6)
   primaryColor: Colors.blue, // Color of the focused input field border
+  secondaryColor: Colors.grey, // Color of the input field border
   buttonStyle: TextButton.styleFrom(
     backgroundColor: Colors.grey.shade200,
     shape: RoundedRectangleBorder(

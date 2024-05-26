@@ -1,6 +1,8 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [1.0.8] - 2024-05-26
+- Add `secondaryColor` to the `OtpInputField` to make it more customizable.
 
 ## [1.0.7] - 2024-04-24
 - Add `onKeyPressed` to the `KrOtpKeyboard` to use it independently of the `OtpInputField`.

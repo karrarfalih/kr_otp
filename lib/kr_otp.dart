@@ -8,6 +8,7 @@ class OtpInputField extends StatefulWidget {
   const OtpInputField({
     super.key,
     this.primaryColor,
+    this.secondaryColor,
     required this.onCodeSubmitted,
     this.length = 6,
     this.buttonStyle,
@@ -17,6 +18,7 @@ class OtpInputField extends StatefulWidget {
   final Future<bool> Function(String code) onCodeSubmitted;
   final int length;
   final Color? primaryColor;
+  final Color? secondaryColor;
   final ButtonStyle? buttonStyle;
   final TextStyle? textStyle;
 
@@ -73,6 +75,7 @@ class _OtpInputFieldState extends State<OtpInputField> {
                     primaryColor: widget.primaryColor,
                     buttonStyle: widget.buttonStyle,
                     textStyle: widget.textStyle,
+                    secondaryColor: widget.secondaryColor,
                     onPressed: () {
                       controller.focusedIndex.value = index;
                       setState(() {});
@@ -94,6 +97,7 @@ class OtpText extends StatelessWidget {
     required this.isFocused,
     required this.isError,
     this.primaryColor,
+    this.secondaryColor,
     this.buttonStyle,
     this.textStyle,
   });
@@ -103,6 +107,7 @@ class OtpText extends StatelessWidget {
   final Function() onPressed;
   final bool isError;
   final Color? primaryColor;
+  final Color? secondaryColor;
   final ButtonStyle? buttonStyle;
   final TextStyle? textStyle;
 
@@ -142,7 +147,7 @@ class OtpText extends StatelessWidget {
                         ? Colors.red
                         : isFocused
                             ? primaryColor ?? Theme.of(context).primaryColor
-                            : Colors.grey.shade300,
+                            : secondaryColor ?? Colors.grey.shade300,
                   ),
                 ),
               ),
