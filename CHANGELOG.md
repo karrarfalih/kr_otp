@@ -1,6 +1,12 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [1.0.10] - 2024-11-21
+- Add physical keys support to Keyboard widget (need focus node).
+- 
+## [1.0.9] - 2024-10-10
+- Upgrade dependencies
+- 
 ## [1.0.8] - 2024-05-26
 - Add `secondaryColor` to the `OtpInputField` to make it more customizable.
 
