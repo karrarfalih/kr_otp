@@ -1,6 +1,8 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [1.0.12] - 2025-4-30
+- Update motion_toast package to latest version
 ## [1.0.11] - 2025-4-30
 - Update vibration package to latest version
 

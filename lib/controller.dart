@@ -77,8 +77,8 @@ class OtpController {
       toastDuration: Duration(seconds: 5),
       constraints: BoxConstraints(maxHeight: 100, minHeight: 50),
       displaySideBar: false,
-      animationType: AnimationType.fromTop,
-      position: MotionToastPosition.top,
+      animationType: AnimationType.slideInFromTop,
+      toastAlignment: Alignment.topCenter,
     ).show(shakeKey.currentContext!);
   }
 
