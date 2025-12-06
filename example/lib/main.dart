@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kr_otp/keyboard.dart';
 import 'package:kr_otp/kr_otp.dart';
 import 'package:lottie/lottie.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
@@ -35,6 +34,8 @@ class _OtpScreenState extends State<OtpScreen> {
     mode: StopWatchMode.countDown,
     presetMillisecond: StopWatchTimer.getMilliSecFromMinute(2),
   );
+
+  final OtpController _otpController = OtpController();
 
   @override
   void initState() {
@@ -93,6 +94,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   children: [
                     const SizedBox(height: 20),
                     OtpInputField(
+                      controller: _otpController,
                       length: 6,
                       onCodeSubmitted: (code) async {
                         await Future.delayed(const Duration(seconds: 1));
@@ -156,7 +158,9 @@ class _OtpScreenState extends State<OtpScreen> {
                 ),
               ),
               const Spacer(),
-              const KrOtpKeyboard(),
+              KrOtpKeyboard(
+                otpController: _otpController,
+              ),
             ],
           ),
         ),

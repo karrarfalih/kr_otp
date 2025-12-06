@@ -8,30 +8,21 @@ import 'package:motion_toast/motion_toast.dart';
 class OtpController {
   static final shakeKey = GlobalKey<ShakeWidgetState>();
 
-  final Future<bool> Function(String code) onCodeSubmitted;
-  final int length;
-
-  static OtpController? instance;
-
-  factory OtpController({
-    required Future<bool> Function(String code) onCodeSubmitted,
-    required int length,
-  }) {
-    if (instance == null || instance!._isDisposed) {
-      instance = OtpController._(onCodeSubmitted, length);
-    }
-    return instance!;
-  }
-
-  OtpController._(this.onCodeSubmitted, this.length);
+  OtpController();
 
   final focusedIndex = 0.obs;
-  late final numbers = List.generate(length, (index) => '').obs;
+  late final Rx<List<String>> numbers = <String>[].obs;
   final isSahking = false.obs;
+  Future<bool> Function(String code)? onCodeSubmitted;
 
-  bool _isDisposed = false;
+  setConfig(int length, Future<bool> Function(String code) onCodeSubmitted) {
+    numbers.value = List.generate(length, (index) => '');
+    this.onCodeSubmitted = onCodeSubmitted;
+  }
 
   onKeyPadPressed(String x) {
+    final length = numbers.value.length;
+    if (length == 0) return;
     if (x == 'x') {
       if (numbers.value[focusedIndex.value].isEmpty) {
         numbers.value[max(focusedIndex.value - 1, 0)] = '';
@@ -51,7 +42,7 @@ class OtpController {
       if (numbers.value.every(
         (e) => e.isNotEmpty && focusedIndex.value == (length - 1),
       )) {
-        onCodeSubmitted.call(numbers.value.join()).then((isSuccess) async {
+        onCodeSubmitted?.call(numbers.value.join()).then((isSuccess) async {
           if (!isSuccess) {
             showToast('Invalid activation code');
             await shake();
@@ -86,6 +77,5 @@ class OtpController {
     focusedIndex.dispose();
     numbers.dispose();
     isSahking.dispose();
-    _isDisposed = true;
   }
 }

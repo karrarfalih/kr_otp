@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kr_otp/controller.dart';
+import 'package:kr_otp/src/controller.dart';
 import 'package:vibration/vibration.dart';
 
 class KrOtpKeyboard extends StatefulWidget {
@@ -18,6 +18,9 @@ class KrOtpKeyboard extends StatefulWidget {
     this.keyboardPadding,
     this.onKeyPressed,
     this.focusNode,
+    this.textEditingController,
+    this.otpController,
+    this.onSubmitted,
   }) : super(key: key);
 
   final Color? buttonColor;
@@ -29,13 +32,15 @@ class KrOtpKeyboard extends StatefulWidget {
   final EdgeInsetsGeometry? keyboardPadding;
   final Function(String)? onKeyPressed;
   final FocusNode? focusNode;
+  final TextEditingController? textEditingController;
+  final OtpController? otpController;
+  final Function()? onSubmitted;
 
   @override
   State<KrOtpKeyboard> createState() => _KrOtpKeyboardState();
 }
 
 class _KrOtpKeyboardState extends State<KrOtpKeyboard> {
-  OtpController? get controller => OtpController.instance;
   late final focusNode = widget.focusNode ?? FocusNode();
 
   @override
@@ -46,12 +51,68 @@ class _KrOtpKeyboardState extends State<KrOtpKeyboard> {
 
   static Timer? timer;
 
+  void _handleKeyEvent(String value) {
+    if (widget.onKeyPressed != null) {
+      widget.onKeyPressed!(value);
+    }
+    if (widget.otpController != null) {
+      widget.otpController!.onKeyPadPressed(value);
+    }
+    final controller = widget.textEditingController;
+    if (controller != null) {
+      final selection = controller.selection;
+      final currentText = controller.text;
+      final hasValidSelection = selection.isValid;
+
+      if (value == 'x') {
+        if (currentText.isEmpty) return;
+
+        if (!hasValidSelection || selection.isCollapsed) {
+          final cursor =
+              hasValidSelection ? selection.start : currentText.length;
+          if (cursor == 0) return;
+          final deleteStart = cursor - 1;
+          final newText = currentText.replaceRange(deleteStart, cursor, '');
+          controller.value = controller.value.copyWith(
+            text: newText,
+            selection: TextSelection.collapsed(offset: deleteStart),
+            composing: TextRange.empty,
+          );
+        } else {
+          final newText =
+              currentText.replaceRange(selection.start, selection.end, '');
+          controller.value = controller.value.copyWith(
+            text: newText,
+            selection: TextSelection.collapsed(offset: selection.start),
+            composing: TextRange.empty,
+          );
+        }
+      } else {
+        final insertStart =
+            hasValidSelection ? selection.start : currentText.length;
+        final insertEnd =
+            hasValidSelection ? selection.end : currentText.length;
+        final newText = currentText.replaceRange(insertStart, insertEnd, value);
+        final newOffset = insertStart + value.length;
+        controller.value = controller.value.copyWith(
+          text: newText,
+          selection: TextSelection.collapsed(offset: newOffset),
+          composing: TextRange.empty,
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return KeyboardListener(
       focusNode: focusNode,
       autofocus: true,
       onKeyEvent: (x) {
+        if (x is KeyDownEvent && x.logicalKey == LogicalKeyboardKey.enter) {
+          widget.onSubmitted?.call();
+          return;
+        }
         String value = '';
         if (x is KeyDownEvent) {
           switch (x.logicalKey) {
@@ -80,11 +141,7 @@ class _KrOtpKeyboardState extends State<KrOtpKeyboard> {
             default:
               return;
           }
-        }
-        if (widget.onKeyPressed != null) {
-          widget.onKeyPressed!(value);
-        } else {
-          controller?.onKeyPadPressed(value);
+          _handleKeyEvent(value);
         }
       },
       child: Container(
@@ -138,11 +195,7 @@ class _KrOtpKeyboardState extends State<KrOtpKeyboard> {
             horizontal: widget.spacing / 2, vertical: widget.runSpacing / 2),
         child: TextButton(
           onPressed: () {
-            if (widget.onKeyPressed != null) {
-              widget.onKeyPressed!(value);
-            } else {
-              controller?.onKeyPadPressed(value);
-            }
+            _handleKeyEvent(value);
             Vibration.hasVibrator().then((canVibrate) {
               if (canVibrate == true)
                 Vibration.vibrate(duration: 5, amplitude: 100);
@@ -184,11 +237,7 @@ class _KrOtpKeyboardState extends State<KrOtpKeyboard> {
             horizontal: widget.spacing / 2, vertical: widget.runSpacing / 2),
         child: GestureDetector(
           onTap: () {
-            if (widget.onKeyPressed != null) {
-              widget.onKeyPressed!('x');
-            } else {
-              controller?.onKeyPadPressed('x');
-            }
+            _handleKeyEvent('x');
             Vibration.hasVibrator().then((canVibrate) {
               if (canVibrate == true)
                 Vibration.vibrate(duration: 5, amplitude: 100);
@@ -197,7 +246,7 @@ class _KrOtpKeyboardState extends State<KrOtpKeyboard> {
           onLongPressCancel: () => timer?.cancel(),
           onLongPressStart: (details) {
             timer = Timer.periodic(Duration(milliseconds: 120), (timer) {
-              controller?.onKeyPadPressed('x');
+              _handleKeyEvent('x');
               Vibration.hasVibrator().then((canVibrate) {
                 if (canVibrate == true)
                   Vibration.vibrate(duration: 5, amplitude: 100);
