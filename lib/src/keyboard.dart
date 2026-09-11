@@ -231,15 +231,21 @@ class _KrOtpKeyboardState extends State<KrOtpKeyboard> {
                   style: widget.primaryTextStyle ??
                       TextStyle(color: Colors.black, fontSize: 22),
                 ),
-                // The letters give way rather than overflow the key when a
-                // caller supplies larger text styles than the key can fit.
+                // The letters shrink to fit rather than overflow the key
+                // when a caller supplies text styles larger than it can hold.
+                // Scaling keeps all four letters; ellipsizing would drop two
+                // of them to make room for the ellipsis itself.
                 Flexible(
-                  child: Text(
-                    letters,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: widget.secondaryTextStyle ??
-                        TextStyle(color: Colors.grey, fontSize: 16),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      letters,
+                      maxLines: 1,
+                      softWrap: false,
+                      style: widget.secondaryTextStyle ??
+                          TextStyle(color: Colors.grey, fontSize: 16),
+                    ),
                   ),
                 ),
               ],

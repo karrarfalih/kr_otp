@@ -1,5 +1,8 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+## [1.0.16] - 2026-9-11
+- A key's letters now scale down to fit instead of ellipsizing, so a tight key shows
+  "WXYZ" slightly smaller rather than "WX...".
 ## [1.0.15] - 2026-9-11
 - Fix `KrOtpKeyboard` silently dropping keypresses while typing quickly. Keys now fire on
   pointer down, so a press is no longer lost when the finger slides past the touch slop or
