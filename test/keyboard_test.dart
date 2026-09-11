@@ -63,6 +63,26 @@ void main() {
     expect(keys, ['7', '8']);
   });
 
+  testWidgets('a key does not overflow when given larger text styles',
+      (tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: SizedBox(
+            width: 360,
+            child: KrOtpKeyboard(
+              keyboardPadding: EdgeInsets.zero,
+              primaryTextStyle:
+                  const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              secondaryTextStyle: const TextStyle(fontSize: 16),
+            ),
+          ),
+        ),
+      ),
+    ));
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('backspace reports one delete per tap', (tester) async {
     await pump(tester);
     await tester.tap(find.byIcon(CupertinoIcons.delete_left_fill));

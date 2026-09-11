@@ -231,10 +231,16 @@ class _KrOtpKeyboardState extends State<KrOtpKeyboard> {
                   style: widget.primaryTextStyle ??
                       TextStyle(color: Colors.black, fontSize: 22),
                 ),
-                Text(
-                  letters,
-                  style: widget.secondaryTextStyle ??
-                      TextStyle(color: Colors.grey, fontSize: 16),
+                // The letters give way rather than overflow the key when a
+                // caller supplies larger text styles than the key can fit.
+                Flexible(
+                  child: Text(
+                    letters,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: widget.secondaryTextStyle ??
+                        TextStyle(color: Colors.grey, fontSize: 16),
+                  ),
                 ),
               ],
             ),
