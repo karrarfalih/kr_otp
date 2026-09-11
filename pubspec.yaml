@@ -1,6 +1,6 @@
 name: kr_otp
 description: "A customizable OTP input field with an optional numeric keypad for Flutter."
-version: 1.0.14
+version: 1.0.15
 homepage: https://github.com/karrarfalih/kr_otp
 screenshots:
   - description: 'This is screenshot that shows the use of the package'

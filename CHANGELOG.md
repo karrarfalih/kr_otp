@@ -1,5 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+## [1.0.15] - 2026-9-11
+- Fix `KrOtpKeyboard` silently dropping keypresses while typing quickly. Keys now fire on
+  pointer down, so a press is no longer lost when the finger slides past the touch slop or
+  when a second finger lands on a key that is already being tracked.
+- Check for a vibrator once instead of on every keystroke.
 ## [1.0.14] - 2026-9-11
 - Fix `OtpInputField` overflowing on narrow screens. The digit boxes now share the
   available width and shrink to fit instead of overflowing.

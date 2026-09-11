@@ -51,6 +51,18 @@ class _KrOtpKeyboardState extends State<KrOtpKeyboard> {
 
   static Timer? timer;
 
+  // Resolved once per process: a platform round trip on every keystroke is
+  // wasted work on a keypad the user is typing into quickly.
+  static Future<bool>? _hasVibrator;
+
+  void _pressKey(String value) {
+    _handleKeyEvent(value);
+    _hasVibrator ??= Vibration.hasVibrator().then((v) => v == true);
+    _hasVibrator!.then((canVibrate) {
+      if (canVibrate) Vibration.vibrate(duration: 5, amplitude: 100);
+    });
+  }
+
   void _handleKeyEvent(String value) {
     if (widget.onKeyPressed != null) {
       widget.onKeyPressed!(value);
@@ -193,37 +205,39 @@ class _KrOtpKeyboardState extends State<KrOtpKeyboard> {
       child: Padding(
         padding: EdgeInsets.symmetric(
             horizontal: widget.spacing / 2, vertical: widget.runSpacing / 2),
-        child: TextButton(
-          onPressed: () {
-            _handleKeyEvent(value);
-            Vibration.hasVibrator().then((canVibrate) {
-              if (canVibrate == true)
-                Vibration.vibrate(duration: 5, amplitude: 100);
-            });
-          },
-          style: widget.buttonStyle ??
-              TextButton.styleFrom(
-                backgroundColor: widget.buttonColor ?? Colors.grey.shade200,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6),
+        // A key fires on pointer down rather than on a completed tap: a tap
+        // recognizer drops the press when the finger slides past the touch
+        // slop, and ignores a second finger landing on a key it is already
+        // tracking. Both happen constantly when someone types quickly.
+        child: Listener(
+          behavior: HitTestBehavior.opaque,
+          onPointerDown: (_) => _pressKey(value),
+          child: TextButton(
+            onPressed: () {},
+            style: widget.buttonStyle ??
+                TextButton.styleFrom(
+                  backgroundColor: widget.buttonColor ?? Colors.grey.shade200,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  minimumSize: Size(0, 55),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                minimumSize: Size(0, 55),
-              ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                value,
-                style: widget.primaryTextStyle ??
-                    TextStyle(color: Colors.black, fontSize: 22),
-              ),
-              Text(
-                letters,
-                style: widget.secondaryTextStyle ??
-                    TextStyle(color: Colors.grey, fontSize: 16),
-              ),
-            ],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  value,
+                  style: widget.primaryTextStyle ??
+                      TextStyle(color: Colors.black, fontSize: 22),
+                ),
+                Text(
+                  letters,
+                  style: widget.secondaryTextStyle ??
+                      TextStyle(color: Colors.grey, fontSize: 16),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -235,50 +249,43 @@ class _KrOtpKeyboardState extends State<KrOtpKeyboard> {
       child: Padding(
         padding: EdgeInsets.symmetric(
             horizontal: widget.spacing / 2, vertical: widget.runSpacing / 2),
-        child: GestureDetector(
-          onTap: () {
-            _handleKeyEvent('x');
-            Vibration.hasVibrator().then((canVibrate) {
-              if (canVibrate == true)
-                Vibration.vibrate(duration: 5, amplitude: 100);
-            });
-          },
-          onLongPressCancel: () => timer?.cancel(),
-          onLongPressStart: (details) {
-            timer = Timer.periodic(Duration(milliseconds: 120), (timer) {
-              _handleKeyEvent('x');
-              Vibration.hasVibrator().then((canVibrate) {
-                if (canVibrate == true)
-                  Vibration.vibrate(duration: 5, amplitude: 100);
+        child: Listener(
+          behavior: HitTestBehavior.opaque,
+          onPointerDown: (_) => _pressKey('x'),
+          child: GestureDetector(
+            onLongPressCancel: () => timer?.cancel(),
+            onLongPressStart: (details) {
+              timer = Timer.periodic(Duration(milliseconds: 120), (timer) {
+                _pressKey('x');
               });
-            });
-          },
-          onLongPressEnd: (_) => timer?.cancel(),
-          onLongPressUp: () => timer?.cancel(),
-          child: TextButton(
-            onPressed: null,
-            style: widget.buttonStyle ??
-                TextButton.styleFrom(
-                  backgroundColor: widget.buttonColor ?? Colors.grey.shade200,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6),
+            },
+            onLongPressEnd: (_) => timer?.cancel(),
+            onLongPressUp: () => timer?.cancel(),
+            child: TextButton(
+              onPressed: null,
+              style: widget.buttonStyle ??
+                  TextButton.styleFrom(
+                    backgroundColor: widget.buttonColor ?? Colors.grey.shade200,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    minimumSize: Size(0, 55),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  minimumSize: Size(0, 55),
-                ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '',
-                  style: widget.primaryTextStyle ??
-                      TextStyle(color: Colors.black, fontSize: 22),
-                ),
-                Icon(
-                  CupertinoIcons.delete_left_fill,
-                  color: widget.primaryTextStyle?.color ?? Colors.black,
-                ),
-              ],
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '',
+                    style: widget.primaryTextStyle ??
+                        TextStyle(color: Colors.black, fontSize: 22),
+                  ),
+                  Icon(
+                    CupertinoIcons.delete_left_fill,
+                    color: widget.primaryTextStyle?.color ?? Colors.black,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
