@@ -55,7 +55,7 @@ class OtpController {
   shake() async {
     shakeKey.currentState?.shake();
     isSahking.value = true;
-    numbers.value = List.generate(6, (index) => '');
+    numbers.value = List.generate(numbers.value.length, (index) => '');
     focusedIndex.value = 0;
     await Future.delayed(Duration(seconds: 1));
     isSahking.value = false;

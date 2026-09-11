@@ -49,25 +49,44 @@ class _OtpInputFieldState extends State<OtpInputField> {
               widget.controller.isSahking,
             ],
             builder: (context, _) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  widget.length,
-                  (index) => OtpText(
-                    value: widget.controller.numbers.value
-                        .elementAt(index)
-                        .toString(),
-                    isFocused: widget.controller.focusedIndex.value == index,
-                    isError: widget.controller.isSahking.value,
-                    primaryColor: widget.primaryColor,
-                    buttonStyle: widget.buttonStyle,
-                    textStyle: widget.textStyle,
-                    secondaryColor: widget.secondaryColor,
-                    onPressed: () {
-                      widget.controller.focusedIndex.value = index;
-                    },
-                  ),
+              final boxes = List.generate(
+                widget.length,
+                (index) => OtpText(
+                  value: widget.controller.numbers.value
+                      .elementAt(index)
+                      .toString(),
+                  isFocused: widget.controller.focusedIndex.value == index,
+                  isError: widget.controller.isSahking.value,
+                  primaryColor: widget.primaryColor,
+                  buttonStyle: widget.buttonStyle,
+                  textStyle: widget.textStyle,
+                  secondaryColor: widget.secondaryColor,
+                  onPressed: () {
+                    widget.controller.focusedIndex.value = index;
+                  },
                 ),
+              );
+              return LayoutBuilder(
+                builder: (context, constraints) {
+                  // Flex children are not allowed when the width is unbounded
+                  // (inside a FittedBox or a horizontal scroll view, for
+                  // example), so keep the boxes at their natural size there.
+                  if (!constraints.hasBoundedWidth) {
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: boxes,
+                    );
+                  }
+                  // Let the boxes share the available width so they shrink to
+                  // fit instead of overflowing on narrow screens.
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      for (final box in boxes) Flexible(child: box),
+                    ],
+                  );
+                },
               );
             }),
       ),

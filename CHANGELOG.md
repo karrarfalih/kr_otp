@@ -1,5 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+## [1.0.14] - 2026-9-11
+- Fix `OtpInputField` overflowing on narrow screens. The digit boxes now share the
+  available width and shrink to fit instead of overflowing.
+- Fix `OtpController.shake()` resetting the field to 6 digits, ignoring the configured `length`.
 ## [1.0.13] - 2025-4-30
 - Refactoring
 ## [1.0.12] - 2025-4-30
